@@ -7,29 +7,21 @@ const {
 const errorDispatcher = (err, req, res, next) => {
   debounceError(err);
 
-  switch (env.NODE_ENV) {
-    case 'development': {
-      return sendErrorDev(err, res);
-    }
+  let error;
 
-    case 'production': {
-      let error;
+  if (err.name === 'CastError')
+    error = handleCastErrorDB(err);
 
-      if (err.name === 'CastError')
-        error = handleCastErrorDB(err);
+  if (
+    err.name === 'MongoError' &&
+    err.code === 11000
+  )
+    error = handleDublicateFieldsDB(err);
 
-      if (
-        err.name === 'MongoError' &&
-        err.code === 11000
-      )
-        error = handleDublicateFieldsDB(err);
+  if (err.name === 'ValidationError')
+    error = handleValidationErrorDB(err);
 
-      if (err.name === 'ValidationError')
-        error = handleValidationErrorDB(err);
-
-      return sendErrorProd(error || err, res);
-    }
-  }
+  return sendErrorProd(error || err, res);
 };
 
 function debounceError(err) {
@@ -38,18 +30,6 @@ function debounceError(err) {
     err.status = err.status || 'error';
     return err;
   }
-}
-
-function sendErrorDev(err, res) {
-  console.log('--DEVELOPMENT ERROR');
-  console.error(err);
-  res.status(err.statusCode).json({
-    name: err.name,
-    status: err.status,
-    message: err.message,
-    error: err,
-    stack: err.stack,
-  });
 }
 
 function sendErrorProd(err, res) {
