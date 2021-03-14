@@ -8,25 +8,24 @@ import Signup from './components/signup/Signup'
 import Login from './components/login/Login'
 import Account from './components/account/account/Account'
 import Landing from './components/landing/Landing'
-import { AuthProvider } from './context/AuthContext'
+import PrivateRoute from './components/pure/PrivateRoute'
+import ProviderRoom from './components/providerroom/ProviderRoom'
 
 const AppRouter = () => {
   return (
     <BrowserRouter>
       <Switch>
-        <Route path="/account">
+        <PrivateRoute path="/account">
           <Account />
-        </Route>
+        </PrivateRoute>
         <Route path="/room/:roomName">
-          <Account />
+          <ProviderRoom />
         </Route>
         <Route path="/signup">
           <Signup />
         </Route>
         <Route path="/login">
-          <AuthProvider>
-            <Login />
-          </AuthProvider>
+          <Login />
         </Route>
         <Route path="/">
           <Landing />

@@ -21,7 +21,9 @@ export const useAuth = () => {
 }
 
 export const AuthProvider = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState()
+  const [currentUser, setCurrentUser] = useState(
+    null
+  )
 
   const source = axios.CancelToken.source()
 
@@ -48,7 +50,12 @@ export const AuthProvider = ({ children }) => {
           cancelToken: source.token,
         }
       )
-      .then((res) => setCurrentUser(res.data))
+      .then((res) => {
+        console.log('currentUserrr')
+        console.log(res.data)
+
+        setCurrentUser(res.data)
+      })
   }
 
   const signup = (data) => {
@@ -57,6 +64,14 @@ export const AuthProvider = ({ children }) => {
         cancelToken: source.token,
       })
       .then((res) => setCurrentUser(res.data))
+  }
+
+  const logout = (data) => {
+    return axios
+      .get('/api/auth/logout', {
+        cancelToken: source.token,
+      })
+      .then((res) => setCurrentUser(null))
   }
 
   useEffect(() => {
@@ -75,6 +90,7 @@ export const AuthProvider = ({ children }) => {
         login,
         cancelRequest,
         signup,
+        logout,
       }}
     >
       {children}

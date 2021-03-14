@@ -17,6 +17,7 @@ import { CssBaseline } from '@material-ui/core'
 import DashBoardHeader from '../appbar/DashBoardHeader'
 import useAccountStyles from './useAccountStyles'
 import providerDashboardRoutes from '../../../config/providerDashboardRoutes'
+import ProviderSidenav from '../sidenav/ProviderSidenav'
 
 const Account = () => {
   const { path } = useRouteMatch()
@@ -35,7 +36,7 @@ const Account = () => {
   const classes = useAccountStyles()
   useEffect(() => {
     if (pathname === '/account')
-      return setSelectedTab('/account/dashboard')
+      return setSelectedTab('/dashboard')
     if (selectedTab.startsWith(pathname)) return
     const currentPathname = `/${
       pathname.split('/')[2]
@@ -52,10 +53,11 @@ const Account = () => {
       <DashBoardHeader
         handleDrawerToggle={handleDrawerToggle}
       />
-      <SideNav
+      <ProviderSidenav
         handleDrawerToggle={handleDrawerToggle}
         mobileOpen={mobileOpen}
         selectedTab={selectedTab}
+        setMobileOpen={setMobileOpen}
       />
       <main className={classes.content}>
         <div className={classes.toolbar} />

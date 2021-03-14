@@ -14,7 +14,12 @@ import {
   Paper,
 } from '@material-ui/core'
 import { ArrowBack as ArrowBackIcon } from '@material-ui/icons'
-import { Link, Redirect } from 'react-router-dom'
+import {
+  Link,
+  Redirect,
+  useHistory,
+  useLocation,
+} from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import loginValidationSchema from './loginValidationSchema'
@@ -35,9 +40,7 @@ const Login = () => {
     formState.errors.email?.message
   const passwordErrorMsg =
     formState.errors.password?.message
-
   const [loading, setLoading] = useState(false)
-
   const formSubmitDisabled =
     !formState.isValid || loading
   const {
@@ -45,7 +48,11 @@ const Login = () => {
     login,
     cancelRequest,
   } = useAuth()
-
+  const location = useLocation()
+  const history = useHistory()
+  const { from } = location.state || {
+    from: { pathname: '/account/dashboard' },
+  }
   const onSubmit = (data) => {
     setLoading(true)
     login(data)
@@ -53,13 +60,13 @@ const Login = () => {
         if (
           error.response.data.status === 'fail'
         ) {
-          ;['email', 'password'].forEach(
-            (field) =>
-              setError(field, {
-                type: 'manual',
-                message:
-                  error.response.data.message,
-              })
+          const fields = ['email', 'password']
+          fields.forEach((field) =>
+            setError(field, {
+              type: 'manual',
+              message:
+                error.response.data.message,
+            })
           )
         }
       })
@@ -70,8 +77,8 @@ const Login = () => {
       cancelRequest('Cancel login request')
     }
   }, [])
-  if (currentUser)
-    return <Redirect to="/account/dashboard" />
+
+  if (currentUser) return <Redirect to={from} />
 
   return (
     <Container

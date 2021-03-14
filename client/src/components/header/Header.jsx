@@ -16,12 +16,9 @@ import {
   Divider,
   ListItemIcon,
 } from '@material-ui/core'
-
 import { Menu as MenuIcon } from '@material-ui/icons'
-
 import ElevationScroll from '../pure/ElevationScroll'
 import useHeaderStyles from './useHeaderStyles'
-
 import projectLogo from '../../Logo.png'
 import landingRoutes from '../../config/landingRoutes'
 
@@ -34,15 +31,12 @@ const Header = ({
     process.browser &&
     /iPad|iPhone|iPod/.test(navigator.userAgent)
   const classes = useHeaderStyles()
-
   const [openDrawer, setOpenDrawer] = useState(
     false
   )
-
   const handleClick = () => {
     setOpenSignupOptions(true)
   }
-
   const routes = landingRoutes
 
   const tabs = (

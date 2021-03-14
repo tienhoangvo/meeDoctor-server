@@ -1,11 +1,15 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
+
 const path = require('path');
 const { static } = require('express');
 const env = require('./env');
 const errorDispatcher = require('./controllers/errorDispatcher');
-
 const app = express();
+
+app.use(cors());
+app.options('*', cors());
 
 if (env.NODE_ENV === 'development') {
   // Log the http request info
